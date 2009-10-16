@@ -1,27 +1,36 @@
-Brindille[] brindilles={new Brindille(100,0,30,0.11),new Brindille(110,0,30,0.1)};
+ArrayList brindilles=new ArrayList();
+//{new Brindille(100,0,30,0.11),new Brindille(110,0,30,0.1)};
 float time=0.0;
 float angleForce=0.0;
 
 void setup(){
   size(200,200);
-  frameRate(100);
+  frameRate(60);
+  float posx;
+  for(int i=0;i<40;i++){
+    brindilles.add(new Brindille(20+5*i,0,30,0.15));
+  }
 }
 
 void draw(){
   background(255);
   incrementTime();
-  angleForce=getAngleForce(time);
-  for(int i=0;i<2;i++){
-    brindilles[i].draw(angleForce);
+  angleForce=getAngleForce(time);  
+  for(int i=0;i<brindilles.size();i++){
+    ((Brindille)brindilles.get(i)).draw(gradientHorizontal(angleForce,20+i*5.0));
   }
 }
 
-float incrementTime(){
-  return time=(time+0.01)%TWO_PI;
+void incrementTime(){
+  time=(time+0.01)%TWO_PI;
 }
 
 float getAngleForce(float time){
-  return sin(time)*PI;
+  return -abs(sin(time))*PI;
+}
+
+float gradientHorizontal(float angleForce, float posx){
+  return angleForce*(1-(posx-20)/width);
 }
 
 class Brindille{
@@ -62,7 +71,7 @@ class Brindille{
   
   // The gradient along the brindille (weak on the base, strong on the top)
   public float gradientForce(float a, float pos){
-    return a*pow(1.3,pos);
+    return a*pow(1.1,pos);
   }
 
   // The gradient of length for each segment of the brindille
